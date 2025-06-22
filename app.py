@@ -2,12 +2,13 @@ import streamlit as st
 import pdfplumber
 import pandas as pd
 import io
-import google.generativeai as genai
+from google import genai
+
 
 
 # Set Gemini API key
-GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
-genai.configure(api_key=GEMINI_API_KEY)
+
+client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
 
 # System prompt for Gemini
 system_prompt = """
@@ -69,7 +70,8 @@ if uploaded_files and st.button("Parse CVs"):
         # Compose input content
         full_prompt = system_prompt + "\n\nCV Content:\n" + text
 
-        response = genai.generate_text(
+        # response = genai.generate_text(
+        response = client.models.generate_content(
             model="gemini-1.5-flash",
             prompt=full_prompt,
             generation_config={"response_mime_type": "application/json"}

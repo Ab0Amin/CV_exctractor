@@ -2,3 +2,4 @@ streamlit
 pdfplumber
 pandas
 google-generativeai
+google-genai
