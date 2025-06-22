@@ -83,7 +83,7 @@ if uploaded_files and st.button("Parse CVs"):
         )
 
         try:
-            parsed = eval(response.text)  # Replace with json.loads for safety in production
+            parsed = json.loads(response.text)
             candidate = parsed.get("Candidate", {})
             skills = ", ".join(s.get("SkillName", "") for s in parsed.get("Skills", []))
 
