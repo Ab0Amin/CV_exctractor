@@ -4,3 +4,4 @@ pandas
 google-generativeai
 google-genai
 openpyxl
+flatten_json
