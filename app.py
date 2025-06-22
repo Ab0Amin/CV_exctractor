@@ -93,9 +93,19 @@ if uploaded_files and st.button("Parse CVs"):
 
             parsed = json.loads(raw)
 
+            
+            from flatten_json import flatten
+
             flat = {"File": file.name}
             for key, value in parsed.items():
-                flat[key] = json.dumps(value, ensure_ascii=False)
+                if isinstance(value, dict):
+                    flat.update(flatten({key: value}))
+                elif isinstance(value, list):
+                    for i, item in enumerate(value):
+                        flat[f"{key}_{i}"] = json.dumps(item, ensure_ascii=False)
+                else:
+                    flat[key] = value
+
 
             results.append(flat)
 
