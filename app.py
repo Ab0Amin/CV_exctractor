@@ -21,6 +21,8 @@ Map links like LinkedIn, GitHub, and Portfolio to their correct fields. If the t
 
 Return all dates in YYYY-MM-DD format, and normalize phone numbers to international format (e.g., +[CountryCode]-[Number]).
 
+Return ONLY valid JSON. Do not include explanation or markdown. Start with '{' and end with '}'.
+
 Expected JSON structure:
 {
   "Candidate": {
@@ -82,33 +84,26 @@ if uploaded_files and st.button("Parse CVs"):
             contents=full_prompt,
 
         )
-
         try:
-            parsed = json.loads(response.text)
-            logging.info(f"Parsed JSON: {parsed}")
-            candidate = parsed.get("Candidate", {})
-            skills = ", ".join(s.get("SkillName", "") for s in parsed.get("Skills", []))
+            raw = response.text.strip()
 
+            # تأكد إنه JSON فعلاً
+            if not raw.startswith("{"):
+                raise ValueError("Response is not JSON")
+
+            parsed = json.loads(raw)
 
             flat = {"File": file.name}
-            print("flat",flat)
             for key, value in parsed.items():
                 flat[key] = json.dumps(value, ensure_ascii=False)
 
             results.append(flat)
-            print("results", results)
-            # results.append({
-            #     "File": file.name,
-            #     "FullName": candidate.get("FullName", ""),
-            #     "Email": candidate.get("Email", ""),
-            #     "Phone": candidate.get("Phone", ""),
-            #     "LinkedIn": candidate.get("LinkedInURL", ""),
-            #     "Portfolio": candidate.get("PortfolioLink", ""),
-            #     "Location": candidate.get("CurrentLocation", ""),
-            #     "Skills": skills
-            # })
+
+        except json.JSONDecodeError:
+            st.error(f"❌ Invalid JSON format in response for file: {file.name}")
+            st.code(response.text)  # عرض النص للمساعدة في التصحيح
         except Exception as e:
-            st.error(f"Failed to parse {file.name}: {e} ")
+            st.error(f"❌ Failed to parse {file.name}: {e}")
 
     df = pd.DataFrame(results)
     st.dataframe(df)
