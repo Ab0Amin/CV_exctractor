@@ -72,9 +72,14 @@ if uploaded_files and st.button("Parse CVs"):
 
         # response = genai.generate_text(
         response = client.models.generate_content(
-            model="gemini-1.5-flash",
-            prompt=full_prompt,
-            generation_config={"response_mime_type": "application/json"}
+           
+       
+         model="gemini-1.5-flash",
+    config={
+        "response_mime_type": "application/json",
+    },
+            contents=full_prompt,
+
         )
 
         try:
