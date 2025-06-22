@@ -89,10 +89,12 @@ if uploaded_files and st.button("Parse CVs"):
 
 
             flat = {"File": file.name}
+            print("flat",flat)
             for key, value in parsed.items():
                 flat[key] = json.dumps(value, ensure_ascii=False)
 
             results.append(flat)
+            print("results", results)
             # results.append({
             #     "File": file.name,
             #     "FullName": candidate.get("FullName", ""),
