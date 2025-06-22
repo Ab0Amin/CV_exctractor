@@ -3,7 +3,7 @@ import pdfplumber
 import pandas as pd
 import io
 from google import genai
-
+import json
 
 
 # Set Gemini API key
@@ -87,16 +87,22 @@ if uploaded_files and st.button("Parse CVs"):
             candidate = parsed.get("Candidate", {})
             skills = ", ".join(s.get("SkillName", "") for s in parsed.get("Skills", []))
 
-            results.append({
-                "File": file.name,
-                "FullName": candidate.get("FullName", ""),
-                "Email": candidate.get("Email", ""),
-                "Phone": candidate.get("Phone", ""),
-                "LinkedIn": candidate.get("LinkedInURL", ""),
-                "Portfolio": candidate.get("PortfolioLink", ""),
-                "Location": candidate.get("CurrentLocation", ""),
-                "Skills": skills
-            })
+
+            flat = {"File": file.name}
+            for key, value in parsed.items():
+                flat[key] = json.dumps(value, ensure_ascii=False)
+
+            results.append(flat)
+            # results.append({
+            #     "File": file.name,
+            #     "FullName": candidate.get("FullName", ""),
+            #     "Email": candidate.get("Email", ""),
+            #     "Phone": candidate.get("Phone", ""),
+            #     "LinkedIn": candidate.get("LinkedInURL", ""),
+            #     "Portfolio": candidate.get("PortfolioLink", ""),
+            #     "Location": candidate.get("CurrentLocation", ""),
+            #     "Skills": skills
+            # })
         except Exception as e:
             st.error(f"Failed to parse {file.name}: {e}")
 
