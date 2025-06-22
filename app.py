@@ -2,7 +2,8 @@ import streamlit as st
 import pdfplumber
 import pandas as pd
 import io
-from google import genai
+import google.generativeai as genai
+
 
 # Set Gemini API key
 GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
