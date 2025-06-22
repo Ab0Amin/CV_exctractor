@@ -4,6 +4,7 @@ import pandas as pd
 import io
 from google import genai
 import json
+import logging
 
 
 # Set Gemini API key
@@ -84,6 +85,7 @@ if uploaded_files and st.button("Parse CVs"):
 
         try:
             parsed = json.loads(response.text)
+            logging.info(f"Parsed JSON: {parsed}")
             candidate = parsed.get("Candidate", {})
             skills = ", ".join(s.get("SkillName", "") for s in parsed.get("Skills", []))
 
@@ -106,7 +108,7 @@ if uploaded_files and st.button("Parse CVs"):
             #     "Skills": skills
             # })
         except Exception as e:
-            st.error(f"Failed to parse {file.name}: {e} \nResponse: {flat}")
+            st.error(f"Failed to parse {file.name}: {e} ")
 
     df = pd.DataFrame(results)
     st.dataframe(df)
