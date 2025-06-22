@@ -106,7 +106,7 @@ if uploaded_files and st.button("Parse CVs"):
             #     "Skills": skills
             # })
         except Exception as e:
-            st.error(f"Failed to parse {file.name}: {e} \nResponse: {results}")
+            st.error(f"Failed to parse {file.name}: {e} \nResponse: {flat}")
 
     df = pd.DataFrame(results)
     st.dataframe(df)
