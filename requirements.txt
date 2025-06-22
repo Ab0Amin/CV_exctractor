@@ -4,4 +4,3 @@ pandas
 google-generativeai
 google-genai
 openpyxl
-json
