@@ -1,14 +1,13 @@
 {
   "Candidate": {
     "FullName": "Ahmed Abdalla",
-    "Nationality": null,
-    "CurrentLocation": "Munich, Germany",
     "Phone": "+49-15753230697",
     "Email": "Ahmed.Abdalla@abdalla-co.com",
     "LinkedInURL": "https://www.linkedin.com/in/ahmed-abdelwadod/",
-    "CareerSummary": "Results-driven Software Developer with expertise in C#, Python, JavaScript, and full-stack development. Proficient in React, Next.js, Django, and Express, with strong knowledge of SQL/NoSQL databases and RESTful APIs. Passionate about building scalable web applications and engineering solutions, with experience in ERP systems, AI-driven applications, and automation. Adept at mentoring, project management, and working in agile environments.",
-    "ProfilePhoto": null,
-    "PortfolioLink": "https://portfolio.abdalla-co.com/"
+    "GitHubURL": "https://github.com/Ab0Amin",
+    "PortfolioLink": "https://portfolio.abdalla-co.com/",
+    "CurrentLocation": "Munich, Germany",
+    "CareerSummary": "Results-driven Software Developer with expertise in C#, Python, JavaScript, and full-stack development. Proficient in React, Next.js, Django, and Express, with strong knowledge of SQL/NoSQL databases and RESTful APIs. Passionate about building scalable web applications and engineering solutions, with experience in ERP systems, AI-driven applications, and automation. Adept at mentoring, project management, and working in agile environments."
   },
   "EmploymentHistory": [
     {
@@ -58,27 +57,24 @@
       "Institution": "Ain Shams University",
       "Location": "Cairo, Egypt",
       "GraduationDate": "2018-09-01",
-      "Major": null
+      "Major": "Civil Engineering"
     }
   ],
   "Certifications": [
     {
       "CertificationTitle": "Frontend instructor",
       "IssuingOrganization": "ReDI School, Munich",
-      "IssueDate": "2023",
-      "ExpiryDate": null
+      "IssueDate": "2023-01-01"
     },
     {
       "CertificationTitle": "Mobile APP developer",
       "IssuingOrganization": "MCIT Egypt",
-      "IssueDate": "2021",
-      "ExpiryDate": null
+      "IssueDate": "2021-01-01"
     },
     {
       "CertificationTitle": "Data science",
       "IssuingOrganization": "Udemy",
-      "IssueDate": "2022",
-      "ExpiryDate": null
+      "IssueDate": "2022-01-01"
     }
   ],
   "Skills": [
@@ -114,16 +110,9 @@
       "ProficiencyLevel": null
     }
   ],
-  "Projects": [],
-  "Publications": [],
-  "VolunteerExperience": [],
-  "References": [],
-  "OtherInformation": [],
   "Languages": [
     { "LanguageName": "English", "ProficiencyLevel": "Fluent" },
     { "LanguageName": "German", "ProficiencyLevel": "A2 (Learning)" },
     { "LanguageName": "Arabic", "ProficiencyLevel": "Fluent" }
-  ],
-  "Awards": [],
-  "Interests": []
+  ]
 }

@@ -6,6 +6,39 @@ import json
 from google import genai
 from openpyxl import load_workbook
 from openpyxl.styles import PatternFill, Font
+import requests
+import base64
+import os
+from PIL import Image
+import fitz 
+
+
+
+
+def upload_to_imagekit(image_path):
+    # ده هو الـ endpoint الصحيح للرفع
+    url = "https://upload.imagekit.io/api/v1/files/upload"
+
+    with open(image_path, "rb") as f:
+        files = {"file": f}
+        data = {
+            "fileName": os.path.basename(image_path),
+            "folder": "/cv_images", 
+        }
+
+        # إعداد الـ Authorization header باستخدام base64 من private key
+        private_key = st.secrets["IMAGEKIT_API"]
+        encoded = base64.b64encode(f"{private_key}:".encode()).decode()
+        headers = {"Authorization": f"Basic {encoded}"}
+
+        res = requests.post(url, files=files, data=data, headers=headers)
+
+        if res.status_code == 200:
+            return res.json()["url"]  # ده اللينك المباشر للصورة
+        else:
+            print("❌ Error uploading image:", res.status_code, res.text)
+            return None
+
 client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
 
 # System prompt for Gemini
@@ -133,8 +166,36 @@ if uploaded_files and st.button("Parse CVs"):
     preview_rows = []
     with st.spinner("🔄 Processing CVs... Please wait"):
         for file in uploaded_files:
+        #    image extraction
+            doc = fitz.open(pdf_path)
+
+            # Extract best (largest) image
+            max_area = 0
+            for page_index in range(len(doc)):
+                images = doc.get_page_images(page_index)
+                for img_index, img in enumerate(images):
+                    xref = img[0]
+                    width, height = img[2], img[3]
+                    area = width * height
+
+                    base_image = doc.extract_image(xref)
+                    image_bytes = base_image["image"]
+                    image_ext = base_image["ext"]
+
+                    image_filename = f"profile_page{page_index+1}_img{img_index+1}.{image_ext}"
+                    image_path = os.path.join(IMAGE_DIR, image_filename)
+
+                    with open(image_path, "wb") as f:
+                        f.write(image_bytes)
+
+                    if area > max_area:
+                        max_area = area
+                        profile_image_path = image_path
+
+            # TEXT EXTRACTION
             with pdfplumber.open(file) as pdf:
                 text_lines = []
+                text_lines.append(f"Embedded Link:: {upload_to_imagekit(profile_image_path)}")
                 for page in pdf.pages:
                     text_lines.append(page.extract_text() or "")
                     for link in page.hyperlinks:
