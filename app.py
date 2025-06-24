@@ -175,13 +175,8 @@ if uploaded_files and st.button("Parse CVs"):
 
                 df_flat.to_excel(writer, sheet_name=candidate_name[:31], index=False)
 
-                # احفظ الملف أولاً
-                writer.close()
-                excel_buffer.seek(0)
-
-                # حمّل الملف
-                wb = load_workbook(excel_buffer)
-                ws = wb[candidate_name[:31]]
+                # احصل على الـ worksheet قبل الإغلاق
+                ws = writer.book[candidate_name[:31]]
 
                 # التنسيقات
                 fill = PatternFill(start_color="D9E1F2", end_color="D9E1F2", fill_type="solid")
@@ -196,11 +191,11 @@ if uploaded_files and st.button("Parse CVs"):
                         ws[f"A{row}"].fill = fill
                         ws[f"A{row}"].font = bold
 
-                # لازم نفرّغ الـ buffer قبل الحفظ عليه من جديد
+                # الآن احفظ التعديلات
+                writer.close()
                 excel_buffer.seek(0)
-                excel_buffer.truncate(0)
-                wb.save(excel_buffer)
-                excel_buffer.seek(0)
+                # wb.save(excel_buffer)
+                # excel_buffer.seek(0)
 
                 preview_rows.append({
                     "File": file.name,
