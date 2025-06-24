@@ -122,7 +122,7 @@ ERD:
 	•	Description
 """
 
-st.title("📄 CV Parser - Gemini Powered")
+st.title("📄 CV Parser - Kafaat solution")
 uploaded_files = st.file_uploader("Upload one or more CVs (PDF)", type="pdf", accept_multiple_files=True)
 
 if uploaded_files and st.button("Parse CVs"):
@@ -130,56 +130,56 @@ if uploaded_files and st.button("Parse CVs"):
     writer = pd.ExcelWriter(excel_buffer, engine="openpyxl")
 
     preview_rows = []
+    with st.spinner("🔄 Processing CVs... Please wait"):
+        for file in uploaded_files:
+            with pdfplumber.open(file) as pdf:
+                text_lines = []
+                for page in pdf.pages:
+                    text_lines.append(page.extract_text() or "")
+                    for link in page.hyperlinks:
+                        uri = link.get("uri", "")
+                        if uri:
+                            text_lines.append(f"Embedded Link: {uri}")
+            text = "\n".join(text_lines)
 
-    for file in uploaded_files:
-        with pdfplumber.open(file) as pdf:
-            text_lines = []
-            for page in pdf.pages:
-                text_lines.append(page.extract_text() or "")
-                for link in page.hyperlinks:
-                    uri = link.get("uri", "")
-                    if uri:
-                        text_lines.append(f"Embedded Link: {uri}")
-        text = "\n".join(text_lines)
+            response = client.models.generate_content(
+                model="gemini-1.5-flash",
+                config={"response_mime_type": "application/json"},
+                contents=system_prompt + "\n\nCV Content:\n" + text,
+            )
 
-        response = client.models.generate_content(
-            model="gemini-1.5-flash",
-            config={"response_mime_type": "application/json"},
-            contents=system_prompt + "\n\nCV Content:\n" + text,
-        )
+            try:
+                parsed = json.loads(response.text.strip())
+                candidate_name = parsed.get("Candidate", {}).get("FullName", "Unknown").strip().replace(" ", "_")
 
-        try:
-            parsed = json.loads(response.text.strip())
-            candidate_name = parsed.get("Candidate", {}).get("FullName", "Unknown").strip().replace(" ", "_")
+                # Build table-like structure
+                flat_rows = []
+                for section, content in parsed.items():
+                    if isinstance(content, dict):
+                        for k, v in content.items():
+                            flat_rows.append({"Section": section, "Field": k, "Value": v})
+                    elif isinstance(content, list):
+                        for item in content:
+                            if isinstance(item, dict):
+                                for k, v in item.items():
+                                    flat_rows.append({"Section": section, "Field": k, "Value": v})
+                                flat_rows.append({"Section": "", "Field": "", "Value": ""})  # spacer
+                            else:
+                                flat_rows.append({"Section": section, "Field": "", "Value": item})
+                    else:
+                        flat_rows.append({"Section": section, "Field": "", "Value": content})
 
-            # Build table-like structure
-            flat_rows = []
-            for section, content in parsed.items():
-                if isinstance(content, dict):
-                    for k, v in content.items():
-                        flat_rows.append({"Section": section, "Field": k, "Value": v})
-                elif isinstance(content, list):
-                    for item in content:
-                        if isinstance(item, dict):
-                            for k, v in item.items():
-                                flat_rows.append({"Section": section, "Field": k, "Value": v})
-                            flat_rows.append({"Section": "", "Field": "", "Value": ""})  # spacer
-                        else:
-                            flat_rows.append({"Section": section, "Field": "", "Value": item})
-                else:
-                    flat_rows.append({"Section": section, "Field": "", "Value": content})
+                df_flat = pd.DataFrame(flat_rows)
+                df_flat.to_excel(writer, sheet_name=candidate_name[:31], index=False)
 
-            df_flat = pd.DataFrame(flat_rows)
-            df_flat.to_excel(writer, sheet_name=candidate_name[:31], index=False)
+                preview_rows.append({
+                    "File": file.name,
+                    "Candidate": parsed.get("Candidate", {}).get("FullName", "")
+                })
 
-            preview_rows.append({
-                "File": file.name,
-                "Candidate": parsed.get("Candidate", {}).get("FullName", "")
-            })
-
-        except Exception as e:
-            st.error(f"❌ Failed to parse {file.name}: {e}")
-            st.code(response.text)
+            except Exception as e:
+                st.error(f"❌ Failed to parse {file.name}: {e}")
+                st.code(response.text)
 
     # Preview summary
     if preview_rows:
