@@ -1,0 +1,129 @@
+{
+  "Candidate": {
+    "FullName": "Ahmed Abdalla",
+    "Nationality": null,
+    "CurrentLocation": "Munich, Germany",
+    "Phone": "+49-15753230697",
+    "Email": "Ahmed.Abdalla@abdalla-co.com",
+    "LinkedInURL": "https://www.linkedin.com/in/ahmed-abdelwadod/",
+    "CareerSummary": "Results-driven Software Developer with expertise in C#, Python, JavaScript, and full-stack development. Proficient in React, Next.js, Django, and Express, with strong knowledge of SQL/NoSQL databases and RESTful APIs. Passionate about building scalable web applications and engineering solutions, with experience in ERP systems, AI-driven applications, and automation. Adept at mentoring, project management, and working in agile environments.",
+    "ProfilePhoto": null,
+    "PortfolioLink": "https://portfolio.abdalla-co.com/"
+  },
+  "EmploymentHistory": [
+    {
+      "JobTitle": "Full stack Developer",
+      "Company": "Wexcute",
+      "Location": "Remote",
+      "StartDate": "2023-08-01",
+      "EndDate": "2024-08-01",
+      "Responsibilities": "Developed full-stack web applications using React, Node.js, and PostgreSQL, improving performance by 30%. Implemented RESTful APIs and microservices, ensuring modularity and scalability. Spearheaded ERP System Development, optimizing business workflows. Built an AI-powered transcription app, enhancing accessibility for multilingual users."
+    },
+    {
+      "JobTitle": "Frontend Instructor",
+      "Company": "ReDI school",
+      "Location": "Munich, Germany",
+      "StartDate": "2023-07-01",
+      "EndDate": "2024-01-01",
+      "Responsibilities": "Delivered frontend development training (React, JavaScript, UI/UX) to diverse students. Designed hands-on projects, ensuring practical application of concepts."
+    },
+    {
+      "JobTitle": "BIM Software Developer",
+      "Company": "IBIM",
+      "Location": "Remote, Australia",
+      "StartDate": "2022-01-01",
+      "EndDate": "2022-06-01",
+      "Responsibilities": "Developed C#-based engineering solutions integrated with Tekla Structure. Created custom desktop applications and automation plug-ins."
+    },
+    {
+      "JobTitle": "BIM Software Developer",
+      "Company": "AIC",
+      "Location": "Cairo, Egypt",
+      "StartDate": "2020-11-01",
+      "EndDate": "2022-03-01",
+      "Responsibilities": "Designed a C++/OpenGL-based CAD tool, replacing AutoCAD for steel design engineers. Automated Tekla workflows using C# and the Tekla API."
+    },
+    {
+      "JobTitle": "BIM Engineer",
+      "Company": "AIC",
+      "Location": "Cairo, Egypt",
+      "StartDate": "2018-09-01",
+      "EndDate": "2020-11-01",
+      "Responsibilities": "Created 3D structural models and detailed drawings in Tekla Structure. Collaborated with cross-functional teams to ensure exact and timely delivery of design models and drawings, facilitating seamless coordination and collaboration."
+    }
+  ],
+  "Education": [
+    {
+      "Degree": "Bachelor of Science in Civil Engineering",
+      "Institution": "Ain Shams University",
+      "Location": "Cairo, Egypt",
+      "GraduationDate": "2018-09-01",
+      "Major": null
+    }
+  ],
+  "Certifications": [
+    {
+      "CertificationTitle": "Frontend instructor",
+      "IssuingOrganization": "ReDI School, Munich",
+      "IssueDate": "2023",
+      "ExpiryDate": null
+    },
+    {
+      "CertificationTitle": "Mobile APP developer",
+      "IssuingOrganization": "MCIT Egypt",
+      "IssueDate": "2021",
+      "ExpiryDate": null
+    },
+    {
+      "CertificationTitle": "Data science",
+      "IssuingOrganization": "Udemy",
+      "IssueDate": "2022",
+      "ExpiryDate": null
+    }
+  ],
+  "Skills": [
+    { "SkillName": "C#", "ProficiencyLevel": null },
+    { "SkillName": "Python", "ProficiencyLevel": null },
+    { "SkillName": "Java", "ProficiencyLevel": null },
+    { "SkillName": "JavaScript", "ProficiencyLevel": null },
+    { "SkillName": "TypeScript", "ProficiencyLevel": null },
+    { "SkillName": "SQL", "ProficiencyLevel": null },
+    { "SkillName": "NoSQL", "ProficiencyLevel": null },
+    { "SkillName": "React.js", "ProficiencyLevel": null },
+    { "SkillName": "Next.js", "ProficiencyLevel": null },
+    { "SkillName": "Django", "ProficiencyLevel": null },
+    { "SkillName": "Express.js", "ProficiencyLevel": null },
+    { "SkillName": "PostgreSQL", "ProficiencyLevel": null },
+    { "SkillName": "MongoDB", "ProficiencyLevel": null },
+    { "SkillName": "Firebase", "ProficiencyLevel": null },
+    { "SkillName": "Docker", "ProficiencyLevel": null },
+    { "SkillName": "Git", "ProficiencyLevel": null },
+    { "SkillName": "Agile", "ProficiencyLevel": null },
+    { "SkillName": "Google Cloud", "ProficiencyLevel": null },
+    { "SkillName": "Netlify", "ProficiencyLevel": null },
+    { "SkillName": "Pandas", "ProficiencyLevel": null },
+    { "SkillName": "NumPy", "ProficiencyLevel": null },
+    { "SkillName": "scikit-learn", "ProficiencyLevel": null },
+    { "SkillName": "Leadership & Mentorship", "ProficiencyLevel": null },
+    {
+      "SkillName": "Problem-Solving & Critical Thinking",
+      "ProficiencyLevel": null
+    },
+    {
+      "SkillName": "Project Management & Team Collaboration",
+      "ProficiencyLevel": null
+    }
+  ],
+  "Projects": [],
+  "Publications": [],
+  "VolunteerExperience": [],
+  "References": [],
+  "OtherInformation": [],
+  "Languages": [
+    { "LanguageName": "English", "ProficiencyLevel": "Fluent" },
+    { "LanguageName": "German", "ProficiencyLevel": "A2 (Learning)" },
+    { "LanguageName": "Arabic", "ProficiencyLevel": "Fluent" }
+  ],
+  "Awards": [],
+  "Interests": []
+}

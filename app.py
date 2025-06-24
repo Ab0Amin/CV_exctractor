@@ -189,8 +189,8 @@ if uploaded_files and st.button("Parse CVs"):
                         ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=3)
                         cell.fill = fill
                         cell.font = bold
-                        ws[f"B{row}"] = None
-                        ws[f"C{row}"] = None
+                        # ws[f"B{row}"] = None
+                        # ws[f"C{row}"] = None
 
                 excel_buffer.seek(0)
                 wb.save(excel_buffer)
