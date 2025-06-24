@@ -195,7 +195,8 @@ if uploaded_files and st.button("Parse CVs"):
             # TEXT EXTRACTION
             with pdfplumber.open(file) as pdf:
                 text_lines = []
-                text_lines.append(f"Embedded Link:: {upload_to_imagekit(profile_image_path)}")
+                image_url = upload_to_imagekit(profile_image_path)
+                text_lines.append(f"Embedded Link:: {image_url}")
                 for page in pdf.pages:
                     text_lines.append(page.extract_text() or "")
                     for link in page.hyperlinks:
