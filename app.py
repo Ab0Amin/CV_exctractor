@@ -2,12 +2,8 @@ import streamlit as st
 import pdfplumber
 import pandas as pd
 import io
-from google import genai
 import json
-import logging
-
-
-# Set Gemini API key
+from google import genai
 
 client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
 
@@ -55,87 +51,71 @@ st.title("📄 CV Parser - Gemini Powered")
 uploaded_files = st.file_uploader("Upload one or more CVs (PDF)", type="pdf", accept_multiple_files=True)
 
 if uploaded_files and st.button("Parse CVs"):
-    results = []
+    excel_buffer = io.BytesIO()
+    writer = pd.ExcelWriter(excel_buffer, engine="openpyxl")
+
+    preview_rows = []
 
     for file in uploaded_files:
         with pdfplumber.open(file) as pdf:
             text_lines = []
             for page in pdf.pages:
-                page_text = page.extract_text() or ""
-                text_lines.append(page_text)
+                text_lines.append(page.extract_text() or "")
                 for link in page.hyperlinks:
                     uri = link.get("uri", "")
                     if uri:
                         text_lines.append(f"Embedded Link: {uri}")
+        text = "\n".join(text_lines)
 
-            text = "\n".join(text_lines)
-
-        # Compose input content
-        full_prompt = system_prompt + "\n\nCV Content:\n" + text
-
-        # response = genai.generate_text(
         response = client.models.generate_content(
-           
-       
-         model="gemini-1.5-flash",
-    config={
-        "response_mime_type": "application/json",
-    },
-            contents=full_prompt,
-
+            model="gemini-1.5-flash",
+            config={"response_mime_type": "application/json"},
+            contents=system_prompt + "\n\nCV Content:\n" + text,
         )
+
         try:
-            raw = response.text.strip()
-
-            # تأكد إنه JSON فعلاً
-            if not raw.startswith("{"):
-                raise ValueError("Response is not JSON")
-
-            parsed = json.loads(raw)
-
-            
-            # Extract candidate name for sheet naming
+            parsed = json.loads(response.text.strip())
             candidate_name = parsed.get("Candidate", {}).get("FullName", "Unknown").strip().replace(" ", "_")
 
-            rows = []
-
-            # Convert each section in JSON to rows within a single sheet
+            # Build table-like structure
+            flat_rows = []
             for section, content in parsed.items():
                 if isinstance(content, dict):
                     for k, v in content.items():
-                        rows.append({"Section": section, "Key": k, "Value": v})
+                        flat_rows.append({"Section": section, "Field": k, "Value": v})
                 elif isinstance(content, list):
                     for item in content:
                         if isinstance(item, dict):
                             for k, v in item.items():
-                                rows.append({"Section": section, "Key": k, "Value": v})
+                                flat_rows.append({"Section": section, "Field": k, "Value": v})
+                            flat_rows.append({"Section": "", "Field": "", "Value": ""})  # spacer
                         else:
-                            rows.append({"Section": section, "Key": "-", "Value": item})
+                            flat_rows.append({"Section": section, "Field": "", "Value": item})
                 else:
-                    rows.append({"Section": section, "Key": "-", "Value": content})
+                    flat_rows.append({"Section": section, "Field": "", "Value": content})
 
-            # Store the structured data for this candidate
-            results.append({
-                "candidate_name": candidate_name,
-                "rows": rows
+            df_flat = pd.DataFrame(flat_rows)
+            df_flat.to_excel(writer, sheet_name=candidate_name[:31], index=False)
+
+            preview_rows.append({
+                "File": file.name,
+                "Candidate": parsed.get("Candidate", {}).get("FullName", "")
             })
 
-        except json.JSONDecodeError:
-            st.error(f"❌ Invalid JSON format in response for file: {file.name}")
-            st.code(response.text)  # عرض النص للمساعدة في التصحيح
         except Exception as e:
             st.error(f"❌ Failed to parse {file.name}: {e}")
+            st.code(response.text)
 
-    df = pd.DataFrame(results)
-    st.dataframe(df)
+    # Preview summary
+    if preview_rows:
+        st.dataframe(pd.DataFrame(preview_rows))
 
-    buffer = io.BytesIO()
-    df.to_excel(buffer, index=False)
-    buffer.seek(0)
+    writer.close()
+    excel_buffer.seek(0)
 
     st.download_button(
-        label="📥 Download Results as Excel",
-        data=buffer,
-        file_name="parsed_cvs.xlsx",
+        label="📥 Download Organized Excel",
+        data=excel_buffer,
+        file_name="organized_cv_output.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
