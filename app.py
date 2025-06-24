@@ -174,8 +174,8 @@ if uploaded_files and st.button("Parse CVs"):
                 df_flat.to_excel(writer, sheet_name=candidate_name[:31], index=False)
 
 
-                writer.close()
-                excel_buffer.seek(0)
+                # writer.close()
+                # excel_buffer.seek(0)
                 wb = load_workbook(excel_buffer)
                 ws = wb[candidate_name[:31]]
 
