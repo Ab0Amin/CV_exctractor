@@ -94,20 +94,31 @@ if uploaded_files and st.button("Parse CVs"):
             parsed = json.loads(raw)
 
             
-            from flatten_json import flatten
+            # Extract candidate name for sheet naming
+            candidate_name = parsed.get("Candidate", {}).get("FullName", "Unknown").strip().replace(" ", "_")
 
-            flat = {"File": file.name}
-            for key, value in parsed.items():
-                if isinstance(value, dict):
-                    flat.update(flatten({key: value}))
-                elif isinstance(value, list):
-                    for i, item in enumerate(value):
-                        flat[f"{key}_{i}"] = json.dumps(item, ensure_ascii=False)
+            rows = []
+
+            # Convert each section in JSON to rows within a single sheet
+            for section, content in parsed.items():
+                if isinstance(content, dict):
+                    for k, v in content.items():
+                        rows.append({"Section": section, "Key": k, "Value": v})
+                elif isinstance(content, list):
+                    for item in content:
+                        if isinstance(item, dict):
+                            for k, v in item.items():
+                                rows.append({"Section": section, "Key": k, "Value": v})
+                        else:
+                            rows.append({"Section": section, "Key": "-", "Value": item})
                 else:
-                    flat[key] = value
+                    rows.append({"Section": section, "Key": "-", "Value": content})
 
-
-            results.append(flat)
+            # Store the structured data for this candidate
+            results.append({
+                "candidate_name": candidate_name,
+                "rows": rows
+            })
 
         except json.JSONDecodeError:
             st.error(f"❌ Invalid JSON format in response for file: {file.name}")
