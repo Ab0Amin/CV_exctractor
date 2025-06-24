@@ -162,6 +162,8 @@ uploaded_files = st.file_uploader("Upload one or more CVs (PDF)", type="pdf", ac
 if uploaded_files and st.button("Parse CVs"):
     excel_buffer = io.BytesIO()
     writer = pd.ExcelWriter(excel_buffer, engine="openpyxl")
+    IMAGE_DIR = "extracted_images"
+    os.makedirs(IMAGE_DIR, exist_ok=True)
 
     preview_rows = []
     with st.spinner("🔄 Processing CVs... Please wait"):
@@ -198,8 +200,10 @@ if uploaded_files and st.button("Parse CVs"):
             with pdfplumber.open(io.BytesIO(file_bytes)) as pdf:
 
                 text_lines = []
-                image_url = upload_to_imagekit(profile_image_path)
-                text_lines.append(f"Embedded Link:: {image_url}")
+                if profile_image_path:
+
+                    image_url = upload_to_imagekit(profile_image_path) 
+                    text_lines.append(f"Embedded Link:: {image_url}")
                 for page in pdf.pages:
                     text_lines.append(page.extract_text() or "")
                     for link in page.hyperlinks:
