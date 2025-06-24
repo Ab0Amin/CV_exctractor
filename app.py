@@ -166,8 +166,9 @@ if uploaded_files and st.button("Parse CVs"):
     preview_rows = []
     with st.spinner("🔄 Processing CVs... Please wait"):
         for file in uploaded_files:
-        #    image extraction
-            doc = fitz.open(pdf_path)
+            # image extraction
+            file_bytes = file.read()
+            doc = fitz.open(stream=io.BytesIO(file_bytes), filetype="pdf")
 
             # Extract best (largest) image
             max_area = 0
@@ -193,7 +194,9 @@ if uploaded_files and st.button("Parse CVs"):
                         profile_image_path = image_path
 
             # TEXT EXTRACTION
-            with pdfplumber.open(file) as pdf:
+            # with pdfplumber.open(file) as pdf:
+            with pdfplumber.open(io.BytesIO(file_bytes)) as pdf:
+
                 text_lines = []
                 image_url = upload_to_imagekit(profile_image_path)
                 text_lines.append(f"Embedded Link:: {image_url}")
