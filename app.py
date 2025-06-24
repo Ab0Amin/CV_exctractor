@@ -171,13 +171,12 @@ if uploaded_files and st.button("Parse CVs"):
                         flat_rows.append({"Section": section, "Field": "", "Value": content})
 
                 df_flat = pd.DataFrame(flat_rows)
+
+
                 df_flat.to_excel(writer, sheet_name=candidate_name[:31], index=False)
 
-
-                # writer.close()
-                # excel_buffer.seek(0)
-                wb = load_workbook(excel_buffer)
-                ws = wb[candidate_name[:31]]
+                # تنسيق الشيت مباشرة من writer.book
+                ws = writer.book[candidate_name[:31]]
 
                 fill = PatternFill(start_color="D9E1F2", end_color="D9E1F2", fill_type="solid")
                 bold = Font(bold=True)
