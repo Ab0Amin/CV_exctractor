@@ -175,14 +175,15 @@ if uploaded_files and st.button("Parse CVs"):
 
                 df_flat.to_excel(writer, sheet_name=candidate_name[:31], index=False)
 
-                # احفظ الكاتب الأول قبل استخدام load_workbook
+                # احفظ الملف أولاً
                 writer.close()
                 excel_buffer.seek(0)
 
+                # حمّل الملف
                 wb = load_workbook(excel_buffer)
                 ws = wb[candidate_name[:31]]
 
-
+                # التنسيقات
                 fill = PatternFill(start_color="D9E1F2", end_color="D9E1F2", fill_type="solid")
                 bold = Font(bold=True)
 
@@ -192,12 +193,12 @@ if uploaded_files and st.button("Parse CVs"):
                     if cell.value and cell.value != section:
                         section = cell.value
                         ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=3)
-                        cell.fill = fill
-                        cell.font = bold
-                        # ws[f"B{row}"] = None
-                        # ws[f"C{row}"] = None
+                        ws[f"A{row}"].fill = fill
+                        ws[f"A{row}"].font = bold
 
+                # لازم نفرّغ الـ buffer قبل الحفظ عليه من جديد
                 excel_buffer.seek(0)
+                excel_buffer.truncate(0)
                 wb.save(excel_buffer)
                 excel_buffer.seek(0)
 
