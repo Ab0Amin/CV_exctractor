@@ -4,7 +4,8 @@ import pandas as pd
 import io
 import json
 from google import genai
-
+from openpyxl import load_workbook
+from openpyxl.styles import PatternFill, Font
 client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
 
 # System prompt for Gemini
@@ -171,6 +172,30 @@ if uploaded_files and st.button("Parse CVs"):
 
                 df_flat = pd.DataFrame(flat_rows)
                 df_flat.to_excel(writer, sheet_name=candidate_name[:31], index=False)
+
+
+                writer.close()
+                excel_buffer.seek(0)
+                wb = load_workbook(excel_buffer)
+                ws = wb[candidate_name[:31]]
+
+                fill = PatternFill(start_color="D9E1F2", end_color="D9E1F2", fill_type="solid")
+                bold = Font(bold=True)
+
+                section = None
+                for row in range(2, ws.max_row + 1):
+                    cell = ws[f"A{row}"]
+                    if cell.value and cell.value != section:
+                        section = cell.value
+                        ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=3)
+                        cell.fill = fill
+                        cell.font = bold
+                        ws[f"B{row}"] = None
+                        ws[f"C{row}"] = None
+
+                excel_buffer.seek(0)
+                wb.save(excel_buffer)
+                excel_buffer.seek(0)
 
                 preview_rows.append({
                     "File": file.name,
