@@ -19,32 +19,107 @@ Return all dates in YYYY-MM-DD format, and normalize phone numbers to internatio
 
 Return ONLY valid JSON. Do not include explanation or markdown. Start with '{' and end with '}'.
 
-Expected JSON structure:
-{
-  "Candidate": {
-    "FullName",
-    "Nationality",
-    "CurrentLocation",
-    "Phone",
-    "Email",
-    "LinkedInURL",
-    "CareerSummary",
-    "ProfilePhoto",
-    "PortfolioLink"
-  },
-  "EmploymentHistory": [ ... ],
-  "Education": [ ... ],
-  "Certifications": [ ... ],
-  "Skills": [ ... ],
-  "Projects": [ ... ],
-  "Publications": [ ... ],
-  "VolunteerExperience": [ ... ],
-  "References": [ ... ],
-  "OtherInformation": [ ... ],
-  "Languages": [ ... ],
-  "Awards": [ ... ],
-  "Interests": [ ... ]
-}
+
+ERD:
+ 
+	1.	Candidate
+	•	CandidateID (Primary Key)
+	•	FullName
+	•	Nationality
+	•	CurrentLocation
+	•	Phone
+	•	Email
+	•	LinkedInURL
+	•	CareerSummary
+	•	ProfilePhoto (Base64 encoded string)
+	•	PortfolioLink
+	2.	EmploymentHistory
+	•	EmploymentID (Primary Key)
+	•	CandidateID (Foreign Key)
+	•	JobTitle
+	•	Company
+	•	Location
+	•	StartDate
+	•	EndDate
+	•	Responsibilities
+	3.	Education
+	•	EducationID (Primary Key)
+	•	CandidateID (Foreign Key)
+	•	Degree
+	•	Institution
+	•	Location
+	•	GraduationDate
+	•	Major
+	4.	Certifications
+	•	CertificationID (Primary Key)
+	•	CandidateID (Foreign Key)
+	•	CertificationTitle
+	•	IssuingOrganization
+	•	IssueDate
+	•	ExpiryDate
+	5.	Skills
+	•	SkillID (Primary Key)
+	•	CandidateID (Foreign Key)
+	•	SkillName
+	•	ProficiencyLevel (e.g., Beginner, Intermediate, Advanced)
+	6.	Projects
+	•	ProjectID (Primary Key)
+	•	CandidateID (Foreign Key)
+	•	ProjectTitle
+	•	ProjectDescription
+	•	Role
+	•	Duration
+	•	TechnologiesUsed
+	7.	Publications
+	•	PublicationID (Primary Key)
+	•	CandidateID (Foreign Key)
+	•	PublicationTitle
+	•	PublicationDate
+	•	Publisher
+	•	Description
+	8.	VolunteerExperience
+	•	VolunteerID (Primary Key)
+	•	CandidateID (Foreign Key)
+	•	Organization
+	•	Role
+	•	Duration
+	•	ActivitiesImpact
+	9.	References
+	•	ReferenceID (Primary Key)
+	•	CandidateID (Foreign Key)
+	•	ReferenceName
+	•	Position
+	•	ContactInformation
+	•	RelationToCandidate
+	10.	OtherInformation
+ 
+	•	OtherInfoID (Primary Key)
+	•	CandidateID (Foreign Key)
+	•	InformationType (e.g., hobbies, languages, portfolio link)
+	•	Details
+ 
+	11.	Languages
+ 
+	•	LanguageID (Primary Key)
+	•	CandidateID (Foreign Key)
+	•	LanguageName
+	•	ProficiencyLevel (e.g., Native, Fluent, Intermediate, Beginner)
+ 
+	12.	Awards
+ 
+	•	AwardID (Primary Key)
+	•	CandidateID (Foreign Key)
+	•	AwardTitle
+	•	IssuingOrganization
+	•	AwardDate
+	•	Description
+ 
+	13.	Interests
+ 
+	•	InterestID (Primary Key)
+	•	CandidateID (Foreign Key)
+	•	InterestName
+	•	Description
 """
 
 st.title("📄 CV Parser - Gemini Powered")
