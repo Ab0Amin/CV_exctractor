@@ -169,6 +169,7 @@ if uploaded_files and st.button("Parse CVs"):
     with st.spinner("🔄 Processing CVs... Please wait"):
         for file in uploaded_files:
             # image extraction
+            profile_image_path = ""
             file_bytes = file.read()
             doc = fitz.open(stream=io.BytesIO(file_bytes), filetype="pdf")
 
