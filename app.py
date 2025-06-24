@@ -175,8 +175,13 @@ if uploaded_files and st.button("Parse CVs"):
 
                 df_flat.to_excel(writer, sheet_name=candidate_name[:31], index=False)
 
-                # تنسيق الشيت مباشرة من writer.book
-                ws = writer.book[candidate_name[:31]]
+                # احفظ الكاتب الأول قبل استخدام load_workbook
+                writer.close()
+                excel_buffer.seek(0)
+
+                wb = load_workbook(excel_buffer)
+                ws = wb[candidate_name[:31]]
+
 
                 fill = PatternFill(start_color="D9E1F2", end_color="D9E1F2", fill_type="solid")
                 bold = Font(bold=True)
