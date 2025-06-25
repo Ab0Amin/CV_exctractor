@@ -170,7 +170,7 @@ if uploaded_files and st.button("Parse CVs"):
         for file in uploaded_files:
             # image extraction
             profile_image_path = ""
-            # ay 7aha2
+           
 
             file_bytes = file.read()
             doc = fitz.open(stream=io.BytesIO(file_bytes), filetype="pdf")
