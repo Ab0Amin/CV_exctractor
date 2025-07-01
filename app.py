@@ -240,7 +240,7 @@ if uploaded_files and st.button("Parse CVs"):
 
                     image_url = upload_to_imagekit(profile_image_path) 
                     text_lines.append(f"Embedded Link: ProfilePhoto  : {image_url}")
-                for page in pdf.pages:
+                for page in pdf:
                     text_lines.append(page.get_text("text")  or "")
                     for link in page.hyperlinks:
                         uri = link.get("uri", "")
