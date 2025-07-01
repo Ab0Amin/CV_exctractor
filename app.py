@@ -200,6 +200,13 @@ if uploaded_files and st.button("Parse CVs"):
             doc = fitz.open(stream=io.BytesIO(file_bytes), filetype="pdf")
             max_area = 0
             for page_index in range(len(doc)):
+                page = doc.load_page(page_index)
+                text_lines.append(page.get_text("text") or "")
+                for link in page.get_links():
+                    uri = link.get("uri")
+                    if uri:
+                        text_lines.append(f"Embedded Link: {uri}")
+
                 images = doc.get_page_images(page_index)
                 for img_index, img in enumerate(images):
                     xref = img[0]
@@ -222,13 +229,13 @@ if uploaded_files and st.button("Parse CVs"):
                 image_url = upload_to_imagekit(profile_image_path)
                 text_lines.append(f"Embedded Link: ProfilePhoto : {image_url}")
 
-            for page_index in range(len(doc)):
-                page = doc.load_page(page_index)
-                text_lines.append(page.get_text("text") or "")
-                for link in page.get_links():
-                    uri = link.get("uri")
-                    if uri:
-                        text_lines.append(f"Embedded Link: {uri}")
+            # for page_index in range(len(doc)):
+            #     page = doc.load_page(page_index)
+            #     text_lines.append(page.get_text("text") or "")
+            #     for link in page.get_links():
+            #         uri = link.get("uri")
+            #         if uri:
+            #             text_lines.append(f"Embedded Link: {uri}")
 
             text = "\n".join(text_lines)
 
