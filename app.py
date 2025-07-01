@@ -158,6 +158,33 @@ ERD:
 	•	CandidateID (Foreign Key)
 	•	InterestName
 	•	Description
+
+    Expected JSON structure:
+{
+  "Candidate": {
+    "FullName",
+    "Nationality",
+    "CurrentLocation",
+    "Phone",
+    "Email",
+    "LinkedInURL",
+    "CareerSummary",
+    "ProfilePhoto",
+    "PortfolioLink"
+  },
+  "EmploymentHistory": [ ... ],
+  "Education": [ ... ],
+  "Certifications": [ ... ],
+  "Skills": [ ... ],
+  "Projects": [ ... ],
+  "Publications": [ ... ],
+  "VolunteerExperience": [ ... ],
+  "References": [ ... ],
+  "OtherInformation": [ ... ],
+  "Languages": [ ... ],
+  "Awards": [ ... ],
+  "Interests": [ ... ]
+}
 """
 
 st.title("📄 CV Parser - Kafaat solution")
