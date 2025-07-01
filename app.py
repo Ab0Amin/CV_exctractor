@@ -234,7 +234,7 @@ if uploaded_files and st.button("Parse CVs"):
 
             # TEXT EXTRACTION
             # with pdfplumber.open(file) as pdf:
-            with fitz.open(io.BytesIO(file_bytes)) as pdf:
+            with fitz.open(stream=file_bytes, filetype="pdf") as pdf:
                 text_lines = []
                 if profile_image_path:
 
