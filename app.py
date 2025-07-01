@@ -74,7 +74,7 @@ ERD:
 	•	Company
 	•	Location
 	•	StartDate
-	•	EndDate
+	•	EndDate (note add present if still employed)
 	•	Responsibilities
 	3.	Education
 	•	EducationID (Primary Key)
@@ -84,8 +84,8 @@ ERD:
 	•	Location
 	•	GraduationDate
 	•	Major
-    •	projects
-    •	projectsDescription
+    •	ProjectName
+    •	ProjectDescription
 	4.	Certifications
 	•	CertificationID (Primary Key)
 	•	CandidateID (Foreign Key)
