@@ -195,6 +195,7 @@ if uploaded_files and st.button("Parse CVs"):
             st.status(f"Processing {idx}/{len(uploaded_files)}: {file.name}")
             profile_image_path = ""
             file_bytes = file.read()
+            text_lines = []
 
             # Image extraction using fitz
             doc = fitz.open(stream=io.BytesIO(file_bytes), filetype="pdf")
@@ -224,7 +225,7 @@ if uploaded_files and st.button("Parse CVs"):
                         profile_image_path = image_path
 
             # Text and link extraction
-            text_lines = []
+            # text_lines = []
             if profile_image_path:
                 image_url = upload_to_imagekit(profile_image_path)
                 text_lines.append(f"Embedded Link: ProfilePhoto : {image_url}")
