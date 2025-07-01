@@ -10,31 +10,24 @@ import requests
 import base64
 import os
 from PIL import Image
-import fitz 
+import fitz  # PyMuPDF
 
-
-
-
+# Upload image to ImageKit.io
 def upload_to_imagekit(image_path):
-    # ده هو الـ endpoint الصحيح للرفع
     url = "https://upload.imagekit.io/api/v1/files/upload"
-
     with open(image_path, "rb") as f:
         files = {"file": f}
         data = {
             "fileName": os.path.basename(image_path),
-            "folder": "/cv_images", 
+            "folder": "/cv_images",
         }
-
-        # إعداد الـ Authorization header باستخدام base64 من private key
         private_key = st.secrets["IMAGEKIT_API"]
         encoded = base64.b64encode(f"{private_key}:".encode()).decode()
         headers = {"Authorization": f"Basic {encoded}"}
 
         res = requests.post(url, files=files, data=data, headers=headers)
-
         if res.status_code == 200:
-            return res.json()["url"]  # ده اللينك المباشر للصورة
+            return res.json()["url"]
         else:
             print("❌ Error uploading image:", res.status_code, res.text)
             return None
@@ -196,20 +189,15 @@ if uploaded_files and st.button("Parse CVs"):
     IMAGE_DIR = "extracted_images"
     os.makedirs(IMAGE_DIR, exist_ok=True)
     preview_rows = []
-    with st.spinner(f"🔄 Processing {len(uploaded_files)} CVs... Please wait"):
+
+    with st.spinner(f"\U0001F504 Processing {len(uploaded_files)} CVs... Please wait"):
         for idx, file in enumerate(uploaded_files, 1):
-            st.write(f"Processing {idx} of {len(uploaded_files)}: {file.name}")
-        # for file in uploaded_files:
-            # image extraction
-            # ay7aga
+            st.status(f"Processing {idx}/{len(uploaded_files)}: {file.name}")
             profile_image_path = ""
-       
-           
-
             file_bytes = file.read()
-            doc = fitz.open(stream=io.BytesIO(file_bytes), filetype="pdf")
 
-            # Extract best (largest) image
+            # Image extraction using fitz
+            doc = fitz.open(stream=io.BytesIO(file_bytes), filetype="pdf")
             max_area = 0
             for page_index in range(len(doc)):
                 images = doc.get_page_images(page_index)
@@ -217,35 +205,31 @@ if uploaded_files and st.button("Parse CVs"):
                     xref = img[0]
                     width, height = img[2], img[3]
                     area = width * height
-
                     base_image = doc.extract_image(xref)
                     image_bytes = base_image["image"]
                     image_ext = base_image["ext"]
-
                     image_filename = f"profile_page{page_index+1}_img{img_index+1}.{image_ext}"
                     image_path = os.path.join(IMAGE_DIR, image_filename)
-
                     with open(image_path, "wb") as f:
                         f.write(image_bytes)
-
                     if area > max_area:
                         max_area = area
                         profile_image_path = image_path
 
-            # TEXT EXTRACTION
-            # with pdfplumber.open(file) as pdf:
-            with fitz.open(stream=file_bytes, filetype="pdf") as pdf:
-                text_lines = []
-                if profile_image_path:
+            # Text and link extraction
+            text_lines = []
+            if profile_image_path:
+                image_url = upload_to_imagekit(profile_image_path)
+                text_lines.append(f"Embedded Link: ProfilePhoto : {image_url}")
 
-                    image_url = upload_to_imagekit(profile_image_path) 
-                    text_lines.append(f"Embedded Link: ProfilePhoto  : {image_url}")
-                for page in pdf:
-                    text_lines.append(page.get_text("text")  or "")
-                    for link in page.hyperlinks:
-                        uri = link.get("uri", "")
-                        if uri:
-                            text_lines.append(f"Embedded Link: {uri}")
+            for page_index in range(len(doc)):
+                page = doc.load_page(page_index)
+                text_lines.append(page.get_text("text") or "")
+                for link in page.get_links():
+                    uri = link.get("uri")
+                    if uri:
+                        text_lines.append(f"Embedded Link: {uri}")
+
             text = "\n".join(text_lines)
 
             response = client.models.generate_content(
@@ -257,8 +241,6 @@ if uploaded_files and st.button("Parse CVs"):
             try:
                 parsed = json.loads(response.text.strip())
                 candidate_name = parsed.get("Candidate", {}).get("FullName", "Unknown").strip().replace(" ", "_")
-
-                # Build table-like structure
                 flat_rows = []
                 for section, content in parsed.items():
                     if isinstance(content, dict):
@@ -269,24 +251,17 @@ if uploaded_files and st.button("Parse CVs"):
                             if isinstance(item, dict):
                                 for k, v in item.items():
                                     flat_rows.append({"Section": section, "Field": k, "Value": v})
-                                flat_rows.append({"Section": "", "Field": "", "Value": ""})  # spacer
+                                flat_rows.append({"Section": "", "Field": "", "Value": ""})
                             else:
                                 flat_rows.append({"Section": section, "Field": "", "Value": item})
                     else:
                         flat_rows.append({"Section": section, "Field": "", "Value": content})
 
                 df_flat = pd.DataFrame(flat_rows)
-
-
                 df_flat.to_excel(writer, sheet_name=candidate_name[:31], index=False)
-
-                # احصل على الـ worksheet قبل الإغلاق
                 ws = writer.book[candidate_name[:31]]
-
-                # التنسيقات
                 fill = PatternFill(start_color="D9E1F2", end_color="D9E1F2", fill_type="solid")
                 bold = Font(bold=True)
-
                 section = None
                 for row in range(2, ws.max_row + 1):
                     cell = ws[f"A{row}"]
@@ -296,30 +271,20 @@ if uploaded_files and st.button("Parse CVs"):
                         ws[f"A{row}"].fill = fill
                         ws[f"A{row}"].font = bold
 
-                # الآن احفظ التعديلات
                 writer.close()
                 excel_buffer.seek(0)
-                # wb.save(excel_buffer)
-                # excel_buffer.seek(0)
 
-                preview_rows.append({
-                    "File": file.name,
-                    "Candidate": parsed.get("Candidate", {}).get("FullName", "")
-                })
+                preview_rows.append({"File": file.name, "Candidate": parsed.get("Candidate", {}).get("FullName", "")})
 
             except Exception as e:
-                st.error(f"❌ Failed to parse {file.name}: {e}")
+                st.error(f"\u274C Failed to parse {file.name}: {e}")
                 st.code(response.text)
 
-    # Preview summary
     if preview_rows:
         st.dataframe(pd.DataFrame(preview_rows))
 
-    writer.close()
-    excel_buffer.seek(0)
-
     st.download_button(
-        label="📥 Download Organized Excel",
+        label="\U0001F4C5 Download Organized Excel",
         data=excel_buffer,
         file_name="organized_cv_output.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
