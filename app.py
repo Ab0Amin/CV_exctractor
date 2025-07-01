@@ -55,7 +55,7 @@ Return ONLY valid JSON. Do not include explanation or markdown. Start with '{' a
 
 it is important to add each field in it's corrent section, for example if the CV has a Arabic, english  or any other language (sometimes it writeen with & seperation) but not in language it should be add to the language section
 
-
+if there is some arabic text make sure it's written correctly in json
 ERD:
  
 	1.	Candidate
