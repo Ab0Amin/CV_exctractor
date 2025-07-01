@@ -84,6 +84,8 @@ ERD:
 	•	Location
 	•	GraduationDate
 	•	Major
+    •	projects
+    •	projectsDescription
 	4.	Certifications
 	•	CertificationID (Primary Key)
 	•	CandidateID (Foreign Key)
