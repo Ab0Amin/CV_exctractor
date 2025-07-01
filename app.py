@@ -79,13 +79,13 @@ ERD:
 	3.	Education
 	•	EducationID (Primary Key)
 	•	CandidateID (Foreign Key)
-	•	Degree
+	•	Degree (e.g., Bachelor's, Master's)
 	•	Institution
-	•	Location
+	•	Location (e.g., City, Country , or check you database for this name and add hint not included in CV)
 	•	GraduationDate
-	•	Major
-    •	ProjectName
-    •	ProjectDescription
+	•	Major   (e.g. , Computer Science, Business Administration)
+    •	ProjectName (e.g., Final Year Project , or try to extract from the CV or conclusion)
+    •	ProjectDescription (e.g., A web application for managing student projects)
 	4.	Certifications
 	•	CertificationID (Primary Key)
 	•	CandidateID (Foreign Key)
