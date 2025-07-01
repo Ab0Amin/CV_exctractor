@@ -84,7 +84,7 @@ ERD:
 	•	Location (e.g., City, Country , or check your  database for this name or search for it and add hint not included in CV)
 	•	GraduationDate
 	•	Major   (e.g. , Computer Science, Business Administration)
-    •	ProjectName (e.g., Final Year Project , or try to extract from the CV or conclusion)
+    •	ProjectName (max 2 to 5 words) (e.g., Final Year Project , or try to extract from the CV or conclusion)
     •	ProjectDescription (e.g., A web application for managing student projects)
 	4.	Certifications
 	•	CertificationID (Primary Key)
