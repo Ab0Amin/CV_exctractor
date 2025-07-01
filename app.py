@@ -234,15 +234,14 @@ if uploaded_files and st.button("Parse CVs"):
 
             # TEXT EXTRACTION
             # with pdfplumber.open(file) as pdf:
-            with pdfplumber.open(io.BytesIO(file_bytes)) as pdf:
-
+            with fitz.open(io.BytesIO(file_bytes)) as pdf:
                 text_lines = []
                 if profile_image_path:
 
                     image_url = upload_to_imagekit(profile_image_path) 
                     text_lines.append(f"Embedded Link: ProfilePhoto  : {image_url}")
                 for page in pdf.pages:
-                    text_lines.append(page.extract_text() or "")
+                    text_lines.append(page.get_text("text")  or "")
                     for link in page.hyperlinks:
                         uri = link.get("uri", "")
                         if uri:
