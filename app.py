@@ -164,13 +164,14 @@ if uploaded_files and st.button("Parse CVs"):
     writer = pd.ExcelWriter(excel_buffer, engine="openpyxl")
     IMAGE_DIR = "extracted_images"
     os.makedirs(IMAGE_DIR, exist_ok=True)
-
+    text = "hi"
     preview_rows = []
-    with st.spinner("🔄 Processing CVs... Please wait"):
+    with st.spinner("🔄 Processing CVs... Please wait" + text):
         for file in uploaded_files:
             # image extraction
             # ay7aga
             profile_image_path = ""
+            text = 1
            
 
             file_bytes = file.read()
