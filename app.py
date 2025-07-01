@@ -81,7 +81,7 @@ ERD:
 	•	CandidateID (Foreign Key)
 	•	Degree (e.g., Bachelor's, Master's)
 	•	Institution
-	•	Location (e.g., City, Country , or check you database for this name and add hint not included in CV)
+	•	Location (e.g., City, Country , or check your  database for this name or search for it and add hint not included in CV)
 	•	GraduationDate
 	•	Major   (e.g. , Computer Science, Business Administration)
     •	ProjectName (e.g., Final Year Project , or try to extract from the CV or conclusion)
