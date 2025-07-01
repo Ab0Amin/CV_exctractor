@@ -53,7 +53,7 @@ Return all dates in YYYY-MM-DD format, and normalize phone numbers to internatio
 
 Return ONLY valid JSON. Do not include explanation or markdown. Start with '{' and end with '}'.
 
-it is important to add each field in it's corrent section, for example if the CV has a Arabic or any other language but not in language it should be add to the language section
+it is important to add each field in it's corrent section, for example if the CV has a Arabic, english  or any other language (sometimes it writeen with & seperation) but not in language it should be add to the language section
 
 
 ERD:
